@@ -5,6 +5,15 @@ import numpy as np
 import plotly.graph_objects as go
 from io import BytesIO
 from utils import apply_terminal_theme, print_terminal_log
+import sys
+import os
+import json
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+try:
+    from agent.run_agent import run_planning_agent
+except Exception as e:
+    run_planning_agent = None
+    print(f"Warning: agent module failed to load. {e}")
 
 st.set_page_config(page_title="NEURAL GRID | EV FORECAST", layout="wide")
 apply_terminal_theme()
@@ -53,7 +62,7 @@ def preprocess_data(df_raw):
 st.title("NEURAL GRID: EV DEMAND FORECASTING")
 st.markdown("---")
 
-tab1, tab2 = st.tabs(["Manual Prediction", "Raw File Batch Processing"])
+tab1, tab2, tab3 = st.tabs(["Manual Prediction", "Raw File Batch Processing", "AI Infrastructure Planner"])
 
 with tab1:
     col_input, col_viz = st.columns([1, 2])
@@ -113,6 +122,47 @@ with tab2:
                 csv_buffer = BytesIO()
                 processed_df.to_csv(csv_buffer, index=False)
                 st.download_button("DOWNLOAD PROCESSED CSV WITH PREDICTIONS", csv_buffer.getvalue(), "Inference_Report.csv", "text/csv")
+                
+                # Save to session state for agent planning
+                st.session_state['processed_df'] = processed_df
 
 st.markdown("---")
 print_terminal_log("System Idle. Awaiting data packet...")
+
+with tab3:
+    st.subheader("Agentic EV Infrastructure Planner")
+    st.write("Reason over predicted demand & retrieve planning guidelines using Open-Source LangGraph + RAG pipeline.")
+    
+    # We display insights, RAG retrieval, LLM reasoning, and Final plan
+    
+    if st.button("RUN AGENTIC PLANNER"):
+        if 'processed_df' in st.session_state and st.session_state['processed_df'] is not None:
+            df_to_use = st.session_state['processed_df']
+            
+            with st.spinner("Agent is reasoning... (This might take a moment using local/fallback model)"):
+                try:
+                    if run_planning_agent is not None:
+                        result = run_planning_agent(df_to_use)
+                        
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            st.markdown("### Demand Insights")
+                            st.json(result.get("insights", {}))
+                            st.markdown("### AI Reasoning Process")
+                            st.json(result.get("reasoning", {}))
+                        
+                        with col2:
+                            st.markdown("### Retrieved Knowledge Base")
+                            st.write(result.get("retrieved_knowledge", []))
+                            st.markdown("### What-If Simulation")
+                            st.json(result.get("simulated_impact", {}))
+                        
+                        st.markdown(f"### Final Planning Recommendations (Loops: {result.get('iteration_count')})")
+                        st.json(result.get("final_plan", {}))
+                    else:
+                        st.error("Agent module is missing or failed to import. Check paths and dependencies.")
+                        
+                except Exception as e:
+                    st.error(f"Agent Execution Error: {str(e)}")
+        else:
+            st.warning("Please upload and run batch inference in 'Raw File Batch Processing' tab first to generate predicted demand before running the agent.")
