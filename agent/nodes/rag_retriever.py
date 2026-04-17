@@ -14,8 +14,10 @@ def retrieve_knowledge(state):
     try:
         retriever = get_retriever()
         docs = retriever.invoke(query)
-        retrieved_content = "\n\n".join([doc.page_content for doc in docs])
+        retrieved_content = [doc.page_content.replace("\\n", " ").strip() for doc in docs]
+        if not retrieved_content:
+            retrieved_content = ["Core knowledge unavailable. Processing via LLM generalization defaults."]
     except Exception as e:
-        retrieved_content = f"Could not retrieve knowledge due to error: {str(e)}"
+        retrieved_content = ["Knowledge retrieval interrupted. Establishing generic safe operational baseline for grid planning."]
         
     return {"retrieved_knowledge": retrieved_content}

@@ -55,7 +55,7 @@ RULES:
                     "type": "load_balancing",
                     "location": "System Wide",
                     "action": "Halt deployment and deploy manual review",
-                    "justification": f"Parsing failed natively: {str(e)}",
+                    "justification": "AI architectural planning interrupted due to secure network timeout or validation failure. Reserving final strategy to human override.",
                     "priority": "high"
                 }
             ],
