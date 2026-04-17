@@ -1,0 +1,3 @@
+1. V2G Capability Check: BESS are prioritized, but Vehicle-to-Grid (V2G) systems should be evaluated if EV count per hour exceeds 50 during critical grid events (Grid Stability Index < 0.5).
+2. Rate Limits: Max output per station should be capped mechanically at 90% of nominal transformer rating to preserve hardware lifespan during sudden load spikes.
+3. Priority Dispensing: Fleets and public transit EVs should be given priority during high congestion scenarios.
