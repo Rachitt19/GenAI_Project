@@ -29,8 +29,8 @@ Base AI models lack knowledge of localized infrastructure rules. Rather than fin
 
 ### 3. OpenRouter API & Intelligent Load Balancing
 We routed our LLM deployment through the **OpenRouter** ecosystem rather than locking directly into a singular API (like OpenAI natively).
-- **The Initial Model Problem**: We initially mapped to `nvidia/nemotron-3-super-120b-a12b:free` purely for reasoning density, but experienced high upstream latency spanning several seconds. 
-- **The Modern Autopiloted Fix**: We upgraded the endpoint to `openrouter/free`. This represents a dynamic load-balancing node that automatically proxies the API request to the absolute fastest, healthiest, and least congested free LLM immediately available on global clusters (such as `Google Gemma v3`). The result? Near-instant architectural payload execution.
+- **The Tradeoff (Quality vs. Latency)**: We actively experimented with dynamic auto-routers (like `openrouter/free`) to achieve near-instant latency. However, high-speed models failed to produce structurally dense architectures and lacked deep contextual understanding.
+- **The Ultimate Choice**: We intentionally hard-coded the AI to route exclusively through **`nvidia/nemotron-3-super-120b-a12b:free`**, a massive 120-billion parameter titan. While it incurs higher upstream latency, its capacity for strict JSON output adherence, multi-variable logic deduction, and uncompromised enterprise-grade reasoning outputs makes it vastly superior to lighter alternatives. We prioritized flawless algorithmic logic over sheer processing speed.
 
 ### 4. Machine Learning Backend (Random Forest)
 Before the AI touches anything, we execute classical mathematical pipelines.
