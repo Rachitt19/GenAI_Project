@@ -1,25 +1,44 @@
-# Intelligent EV Charging Demand Prediction
+# Agentic EV Infrastructure Planning & Demand Prediction
 **Newton School of Technology | Capstone Project 15**
 
-This project implements a high-accuracy machine learning pipeline to forecast Electric Vehicle (EV) charging demand. By analyzing nearly 90,000 hourly records from California-based stations, we provide a robust baseline for grid stability and autonomous infrastructure planning.
+This project implements a state-of-the-art dual-pipeline ecosystem. It merges a **High-Accuracy Machine Learning Time-Series Forecaster** with an **Autonomous AI Agentic Orchestration Layer** to seamlessly forecast EV charging stress and actively deploy intelligent grid-management strategies.
 
 ## Team Contributions
 * **Krishna:** Data Pipeline Engineering & ML Model Training
 * **Saumya Mishra:** Data Cleaning, Imputation & Quality Assurance
-* **Rachit Gupta:** Time-Series Feature Engineering & Logic Extraction
+* **Rachit Gupta:** Time-Series Feature Engineering, LangGraph Orchestration & AI Logic Extraction
 * **Aditya Rana:** Performance Analytics & System Evaluation
 
-## Technical Baseline
-* **Model:** Random Forest Regressor (Ensemble Learning)
-* **Accuracy:** 89.16% R2 Score
-* **Deployment:** Streamlit (Hosted)
-* **Milestone 1 Goal:** Establish a reliable demand forecasting engine.
-* **Milestone 2 Goal:** Transition to a LangGraph-powered Agentic Assistant.
+---
 
-[Image of a data preprocessing flowchart showing data loading, handling mixed date formats, and feature engineering]
+## 🚀 The AI Architecture Stack (Why We Used What We Used)
+
+### 1. LangGraph (The Agentic Orchestration Engine)
+Traditional LLM wrappers simply output text. We used **LangGraph** because it allows us to build a deterministic, cyclical *State Graph*. 
+- Our ecosystem contains 5 autonomous AI nodes: `Reasoning Engine` -> `RAG Retriever` -> `Planner` -> `Simulator` -> `Evaluator`.
+- **Why LangGraph?** If the generated plan is too vague or hallucinates, the `Evaluator` node catches it and physically routes the state payload *backwards* in a recursive loop to force the AI to self-correct.
+
+### 2. Retrieval-Augmented Generation (RAG) via FAISS
+Base AI models lack knowledge of localized infrastructure rules. Rather than fine-tuning a massive model, we utilized **RAG** (Retrieval-Augmented Generation).
+- **FAISS Vector Store**: We embedded local textual files (like `ev_planning_rules.txt`) into high-dimensional vectors cleanly chunked into sections.
+- **Why FAISS (Local ChromaDB Alternative)?** FAISS is globally tested for exceptionally fast similarity search without needing massive graphical overhead or external cloud databases. It cleanly grabs the exact engineering guidelines required for the AI during the active prompt phase.
+
+### 3. OpenRouter API & Intelligent Load Balancing
+We routed our LLM deployment through the **OpenRouter** ecosystem rather than locking directly into a singular API (like OpenAI natively).
+- **The Initial Model Problem**: We initially mapped to `nvidia/nemotron-3-super-120b-a12b:free` purely for reasoning density, but experienced high upstream latency spanning several seconds. 
+- **The Modern Autopiloted Fix**: We upgraded the endpoint to `openrouter/free`. This represents a dynamic load-balancing node that automatically proxies the API request to the absolute fastest, healthiest, and least congested free LLM immediately available on global clusters (such as `Google Gemma v3`). The result? Near-instant architectural payload execution.
+
+### 4. Machine Learning Backend (Random Forest)
+Before the AI touches anything, we execute classical mathematical pipelines.
+- **Autoregressive Features**: Extracted explicit time-delayed memory markers (`Demand_Lag_1-3`) and cyclic averages.
+- **Strict Chronological Splitting**: We stripped random `.train_test_split` methods that caused data leakage, shifting into 80/20 top-down boundaries.
+
+---
 
 ## Project Structure
-* `data/`: Consolidated station datasets.
-* `models/`: Serialized model binaries (.pkl).
-* `notebooks/`: Jupyter development environments.
-* `src/`: Streamlit dashboard source code.
+* `/agent/`: The autonomous LangGraph nodes, RAG tools, and AI ecosystem.
+* `/data/`: Consolidated EV station datasets for inference processing.
+* `/models/`: Serialized model binaries and `.pkl` data scaling caches.
+* `/src/`: Streamlit Application dashboard scripts.
+* `generate_model.py`: Training engine containing the entire Time-Series ML script. 
+* `.env`: Secure OpenRouter API mapping boundary.
