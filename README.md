@@ -6,7 +6,11 @@ This project implements a state-of-the-art dual-pipeline ecosystem. It merges a 
 ## Team Contributions
 * **Krishna:** Data Pipeline Engineering & ML Model Training
 * **Saumya Mishra:** Data Cleaning, Imputation & Quality Assurance
-* **Rachit Gupta:** Time-Series Feature Engineering, LangGraph Orchestration & AI Logic Extraction
+* **Rachit Gupta:** 
+  - **Agentic Ecosystem Architecture**: Constructed the multi-node, recursive LangGraph orchestration state network (Reasoning, Evaluator, Planner loops).
+  - **Enterprise UI/UX Build**: Engineered the professional Command Center Streamlit dashboard, interactive plotting metrics, and format-stripped RAG knowledge visualizers.
+  - **API Security & Cloud Routing**: Implemented `.env` local tracking abstraction and ultra-low-latency upstream endpoint load-balancing (OpenRouter).
+  - **ML Pipeline Fortification**: Programmed robust baseline time-series fallback heuristics, neutralizing missing data-index key errors natively during structural inference generation.
 * **Aditya Rana:** Performance Analytics & System Evaluation
 
 ---
